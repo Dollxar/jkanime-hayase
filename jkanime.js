@@ -1,4 +1,4 @@
-export default {
+var jkanime = {
   id: "jkanime",
   name: "JKanime",
 
@@ -27,5 +27,9 @@ export default {
     };
   }
 };
+
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = jkanime;
+}
 
 console.log("JKanime loaded");
