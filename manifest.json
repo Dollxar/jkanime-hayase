@@ -1,8 +1,8 @@
 {
+  "id": "jkanime",
   "name": "JKanime",
-  "description": "JKanime extension for Hayase",
-  "js": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js",
-  "version": "1.0.0",
   "author": "Dollxar",
-  "icon": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/icon.png"
+  "description": "JKanime extension for Hayase",
+  "version": "1.0.0",
+  "entry": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js"
 }
