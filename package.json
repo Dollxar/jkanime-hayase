@@ -1,0 +1,33 @@
+{
+  "name": "jkanime-hayase",
+  "version": "1.0.0",
+  "description": "JKanime extension for Hayase anime streaming app",
+  "type": "module",
+  "main": "jkanime.js",
+  "scripts": {
+    "test": "node jkanime.test.js",
+    "lint": "eslint *.js",
+    "dev": "node jkanime.js"
+  },
+  "keywords": [
+    "jkanime",
+    "hayase",
+    "anime",
+    "extension",
+    "streaming"
+  ],
+  "author": "Dollxar <german.reyes22@cetis107.edu.mx>",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Dollxar/jkanime-hayase.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Dollxar/jkanime-hayase/issues"
+  },
+  "homepage": "https://github.com/Dollxar/jkanime-hayase#readme",
+  "devDependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
