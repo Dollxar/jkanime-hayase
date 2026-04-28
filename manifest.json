@@ -5,10 +5,6 @@
     "version": "1.0.0",
     "type": "torrent",
     "accuracy": "medium",
-    "media": "sub",
-    "languages": ["JP"],
-    "icon": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/icon.svg",
-    "code": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js",
-    "update": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/manifest.json"
+    "code": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js"
   }
 ]
