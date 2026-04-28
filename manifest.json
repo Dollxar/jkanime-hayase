@@ -1,0 +1,12 @@
+{
+  "name": "JKanime",
+  "version": "1.0.0",
+  "extensions": [
+    {
+      "name": "JKanime",
+      "id": "jkanime",
+      "icon": "",
+      "script": "jkanime.js"
+    }
+  ]
+}
