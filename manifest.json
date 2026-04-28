@@ -2,7 +2,7 @@
   "id": "jkanime",
   "name": "JKanime",
   "author": "Dollxar",
-  "description": "JKanime extension for Hayase anime streaming",
+  "description": "JKanime extension for Hayase",
   "version": "1.0.0",
-  "url": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js"
+  "script": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js"
 }
