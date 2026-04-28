@@ -1,203 +1,162 @@
 # JKanime Hayase Extension
 
-Una extensión para **Hayase** (app de anime) que integra **JKanime** como proveedor de contenido de anime en streaming.
+Una extensión de torrents para **Hayase** que permite buscar animes de **JKanime** y obtener magnet links para torrentes.
 
 ## 📋 Características
 
-- ✅ **Búsqueda de anime** - Busca por título en JKanime
-- ✅ **Listado de episodios** - Obtiene todos los episodios disponibles
-- ✅ **Streaming** - Obtiene el enlace de reproducción del episodio
-- ✅ **Caché inteligente** - Almacena resultados por 1 hora para mejorar rendimiento
-- ✅ **Manejo robusto de errores** - Validación y excepciones personalizadas
-- ✅ **Tests unitarios** - Suite completa de pruebas
+- ✅ **Búsqueda de animes** - Busca por título en JKanime
+- ✅ **Magnet links** - Genera links de magnet para torrentes
+- ✅ **Metadata de torrentes** - Seeders, leechers, tamaño, fecha
+- ✅ **Compatible con Hayase** - API completa implementada
+- ✅ **Fallback scraper** - Si el API falla, hace scraping de la web
 
 ## 🏗️ Estructura del Proyecto
 
 ```
 jkanime-hayase/
-├── manifest.json          # Configuración del plugin
-├── jkanime.js            # Lógica principal
-├── jkanime.test.js       # Suite de tests
+├── manifest.json          # Configuración para Hayase
+├── jkanime.js            # Lógica de extensión torrent
+├── icon.svg              # Icono de la extensión
 ├── README.md             # Este archivo
-├── .gitignore            # Archivos ignorados por git
-└── CONTRIBUTING.md       # Guía de contribución
+├── .gitignore            # Archivos ignorados
+└── .git/                 # Repositorio git
 ```
 
-## 🚀 Instalación
+## 🚀 Instalación en Hayase
 
-### En Hayase:
-1. Ve a **Extensiones** en Hayase
-2. Pega esta URL: `https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/manifest.json`
-3. ¡Listo! Podrás buscar anime en JKanime desde Hayase
+1. Abre **Hayase**
+2. Ve a **Settings → Extensions → Repositories**
+3. Pega esta URL:
+   ```
+   https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/manifest.json
+   ```
+4. Click en **"Import Extensions"**
+5. ¡Listo! La extensión aparecerá en tu lista de extensiones
 
-### Desarrollo local:
-```bash
-git clone https://github.com/Dollxar/jkanime-hayase.git
-cd jkanime-hayase
-```
+## 📖 Cómo Funciona
 
-## 📖 Uso
+1. **Búsqueda**: Cuando buscas un anime en Hayase, la extensión:
+   - Consulta la API de JKanime
+   - Extrae información del anime
+   - Busca los archivos torrent
+   - Genera magnet links
 
-### En tu aplicación:
+2. **Torrent**: Hayase recibe los magnet links y:
+   - Se conecta a la red de torrent
+   - Descarga el contenido
+   - Lo reproduce en el player
+
+3. **Offline**: Hayase cachea resultados anteriores para modo offline
+
+## 🔧 Métodos Implementados
+
+### `test()`
+Verifica que la extensión funciona conectando a JKanime.
 
 ```javascript
-import jkanime from './jkanime.js';
-
-// Buscar anime
-const results = await jkanime.search('Naruto');
-// → [{ title: 'Naruto', url: '...', image: '...', ... }]
-
-// Obtener episodios
-const episodes = await jkanime.episodes('https://jkanime.net/anime/naruto');
-// → [{ number: 1, title: 'Episodio 1', url: '...' }, ...]
-
-// Obtener stream
-const stream = await jkanime.stream('https://jkanime.net/anime/naruto#ep-1');
-// → { url: 'https://...', quality: 'default', headers: {...} }
-
-// Limpiar caché
-jkanime.clearCache();
-
-// Ver estadísticas del caché
-console.log(jkanime.getCacheStats());
+const works = await extension.test();
+// true o throws error
 ```
 
-## 🔧 API
+### `single(query, options, fetch)`
+Busca episodios simples individuales.
 
-### `search(query: string): Promise<Array>`
-Busca anime por nombre.
-
-**Parámetros:**
-- `query` (string): Término de búsqueda
-
-**Retorna:** Array de objetos con estructura:
 ```javascript
-{
-  title: string,           // Nombre del anime
-  url: string,            // URL en JKanime
-  image: string|null,     // URL de poster
-  description: string|null // Descripción
-}
+const results = await extension.single(query, options, fetch);
+// Retorna array de TorrentResult
 ```
 
-**Errores:**
-- `EMPTY_QUERY` - Query vacío
-- `FETCH_ERROR` - Error al obtener datos
-- `SEARCH_ERROR` - Error general de búsqueda
+### `batch(query, options, fetch)`
+Busca releases en lote (temporadas completas).
 
----
+```javascript
+const results = await extension.batch(query, options, fetch);
+```
 
-### `episodes(url: string): Promise<Array>`
-Obtiene los episodios disponibles de un anime.
+### `movie(query, options, fetch)`
+Busca películas de anime.
 
-**Parámetros:**
-- `url` (string): URL del anime en JKanime
+```javascript
+const results = await extension.movie(query, options, fetch);
+```
 
-**Retorna:** Array de objetos:
+## 📊 Formato de Resultados
+
+Cada resultado retornado tiene esta estructura:
+
 ```javascript
 {
-  number: number,    // Número de episodio
-  title: string,     // Título del episodio
-  url: string        // URL del episodio
+  title: "Attack on Titan S01E01",
+  link: "magnet:?xt=urn:btih:...",  // Magnet link
+  hash: "a1b2c3d4...",              // Info hash
+  seeders: 150,                     // Seeders activos
+  leechers: 45,                     // Leechers activos
+  downloads: 1250,                  // Descargas totales
+  size: 1500000000,                 // Tamaño en bytes
+  date: Date,                       // Fecha de subida
+  accuracy: "medium",               // Precisión de búsqueda
+  type: "batch"                     // Tipo: batch, best, alt
 }
 ```
 
-**Errores:**
-- `EMPTY_URL` - URL vacía
-- `FETCH_ERROR` - Error HTTP
-- `EPISODES_ERROR` - Error al parsear episodios
+## ⚙️ Configuración
 
----
+La extensión se configura automáticamente, pero puedes ajustar en Hayase:
 
-### `stream(url: string): Promise<Object>`
-Obtiene el enlace de streaming de un episodio.
+- **Settings → Extensions → JKanime**
+- Aquí aparecerán opciones configurables
 
-**Parámetros:**
-- `url` (string): URL del episodio
+## 🐛 Troubleshooting
 
-**Retorna:**
-```javascript
-{
-  url: string,      // URL del stream
-  quality: string,  // Calidad (default, 720p, etc)
-  headers: object   // Headers necesarios para reproducción
+### "Extension offline"
+1. Verifica que jkanime.net esté accesible
+2. Si está bloqueado, usa VPN
+3. Intenta desde la terminal: `ping jkanime.net`
+
+### "No results found"
+1. La extensión puede tardar 10-15s en buscar
+2. Usa títulos en inglés o japonés
+3. Prueba con animes populares
+
+### "Invalid torrent link"
+1. El link puede estar roto
+2. La extensión lo detectará y lo marcará con `accuracy: "low"`
+3. Hayase buscará en otras extensiones
+
+## 📝 API de Hayase
+
+### TorrentQuery
+```typescript
+interface TorrentQuery {
+  media: any                    // Objeto Media de AniList
+  anilistId: number            // ID en AniList
+  anidbAid?: number            // ID en AniDB
+  titles: string[]             // Títulos alternativos
+  episode: number              // Episodio a buscar
+  resolution: string           // Resolución: 2160, 1080, 720, etc
+  exclusions: string[]         // Keywords a excluir
+  type?: 'sub' | 'dub'        // Subtítulos o doblaje
+  fetch: typeof fetch          // Función fetch para requests
 }
 ```
 
-**Errores:**
-- `EMPTY_URL` - URL vacía
-- `FETCH_ERROR` - Error HTTP
-- `NO_STREAM` - No se encontró URL de stream
-- `STREAM_ERROR` - Error general
-
----
-
-### `clearCache(): void`
-Limpia todo el caché almacenado.
-
----
-
-### `getCacheStats(): Object`
-Retorna estadísticas del caché.
-
-**Retorna:**
-```javascript
-{
-  size: number,      // Cantidad de entradas
-  items: string[]    // Lista de claves cacheadas
+### TorrentResult
+```typescript
+interface TorrentResult {
+  title: string                // Título del torrent
+  link: string                 // Magnet link o .torrent
+  hash: string                 // Info hash
+  seeders: number              // Seeders
+  leechers: number             // Leechers
+  downloads: number            // Descargas totales
+  accuracy: 'high'|'medium'|'low'  // Precisión
+  size: number                 // Tamaño en bytes
+  date: Date                   // Fecha de subida
+  type?: 'batch'|'best'|'alt'  // Tipo de release
 }
 ```
 
-## 🧪 Tests
-
-Ejecutar los tests:
-
-```bash
-node jkanime.test.js
-```
-
-### Cobertura de tests:
-
-- ✅ Funcionalidad de caché (set, get, clear, stats)
-- ✅ Módulo (propiedades requeridas)
-- ✅ Manejo de errores (validaciones)
-- ✅ Métodos principales (search, episodes, stream)
-- ✅ Tests de integración
-
-## 📊 Caché
-
-El sistema de caché automáticamente:
-- Almacena resultados durante **1 hora**
-- Se valida automáticamente en cada acceso
-- Puede limpiarse manualmente con `clearCache()`
-- Mejora significativamente el rendimiento
-
-**Ejemplo:**
-```javascript
-// Primera llamada (desde red, ~500ms)
-await jkanime.search('Naruto');
-
-// Segunda llamada (desde caché, ~1ms)
-await jkanime.search('Naruto');
-```
-
-## ⚠️ Manejo de Errores
-
-Todos los métodos lanzan `JKanimeError` con propiedades:
-- `message` - Descripción del error
-- `code` - Código único del error
-
-```javascript
-try {
-  await jkanime.search('');
-} catch (error) {
-  if (error.code === 'EMPTY_QUERY') {
-    console.log('El query no puede estar vacío');
-  }
-}
-```
-
-## 🤝 Contribución
+## 🤝 Contribuir
 
 Ver [CONTRIBUTING.md](CONTRIBUTING.md) para detalles sobre cómo contribuir.
 
@@ -217,6 +176,9 @@ Abre un issue en [GitHub Issues](https://github.com/Dollxar/jkanime-hayase/issue
 
 ---
 
-**Versión**: 1.0.0  
+**Versión**: 1.0.0 (Hayase Torrent Extension)  
+**Tipo**: Torrent Extension  
+**Compatibilidad**: Hayase 0.1.0+  
 **Última actualización**: 2026-04-28  
-**Estado**: Beta - Funcional pero en desarrollo continuo
+**Estado**: Beta - Funcional
+

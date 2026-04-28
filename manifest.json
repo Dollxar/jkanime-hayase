@@ -1,8 +1,14 @@
-{
-  "id": "jkanime",
-  "name": "JKanime",
-  "author": "Dollxar",
-  "description": "JKanime extension for Hayase",
-  "version": "1.0.0",
-  "js": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js"
-}
+[
+  {
+    "name": "JKanime",
+    "id": "jkanime",
+    "version": "1.0.0",
+    "type": "torrent",
+    "accuracy": "medium",
+    "media": "sub",
+    "languages": ["JP"],
+    "icon": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/icon.svg",
+    "code": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js",
+    "update": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/manifest.json"
+  }
+]
