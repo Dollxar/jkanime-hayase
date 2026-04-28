@@ -27,3 +27,5 @@ export default {
     };
   }
 };
+
+console.log("JKanime loaded");
