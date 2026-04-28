@@ -1,10 +1,8 @@
-[
-  {
-    "name": "JKanime",
-    "id": "jkanime",
-    "version": "1.0.0",
-    "type": "torrent",
-    "accuracy": "medium",
-    "code": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js"
-  }
-]
+{
+  "name": "JKanime",
+  "id": "jkanime",
+  "version": "1.0.0",
+  "type": "torrent",
+  "accuracy": "medium",
+  "code": "https://raw.githubusercontent.com/Dollxar/jkanime-hayase/main/jkanime.js"
+}
