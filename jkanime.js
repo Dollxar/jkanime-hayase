@@ -1,5 +1,10 @@
 // JKanime Hayase Torrent Extension
 // Scraper compatible con Web Worker de Hayase
+// Debug: si ves esto, el archivo cargó correctamente
+
+if (typeof console !== 'undefined') {
+  console.log('[JKanime] Extension loaded in Hayase');
+}
 
 function generateHash(str) {
   let hash = '';
@@ -44,14 +49,24 @@ function generateFallbackResults(query, episode) {
 export default {
   async test(fetch) {
     try {
+      if (typeof console !== 'undefined') {
+        console.log('[JKanime] test() called');
+      }
       const res = await fetch('https://jkanime.net');
       return res.ok;
     } catch (e) {
+      if (typeof console !== 'undefined') {
+        console.error('[JKanime] test() error:', e);
+      }
       return false;
     }
   },
 
   async single(query, options, fetch) {
+    if (typeof console !== 'undefined') {
+      console.log('[JKanime] single() called with query:', query);
+    }
+    
     const titles = query.titles || ['anime'];
     const searchQuery = titles[0];
     const episode = query.episode || 1;
@@ -87,11 +102,18 @@ export default {
 
       return results.length > 0 ? results : generateFallbackResults(searchQuery, episode);
     } catch (e) {
+      if (typeof console !== 'undefined') {
+        console.error('[JKanime] single() error:', e);
+      }
       return generateFallbackResults(searchQuery, episode);
     }
   },
 
   async batch(query, options, fetch) {
+    if (typeof console !== 'undefined') {
+      console.log('[JKanime] batch() called with query:', query);
+    }
+    
     const titles = query.titles || ['anime'];
     const searchQuery = titles[0];
     const episode = query.episode || 1;
@@ -128,11 +150,18 @@ export default {
 
       return results.length > 0 ? results : generateFallbackResults(searchQuery, 'batch');
     } catch (e) {
+      if (typeof console !== 'undefined') {
+        console.error('[JKanime] batch() error:', e);
+      }
       return generateFallbackResults(searchQuery, 'batch');
     }
   },
 
   async movie(query, options, fetch) {
+    if (typeof console !== 'undefined') {
+      console.log('[JKanime] movie() called with query:', query);
+    }
+    
     const titles = query.titles || ['pelicula'];
     const searchQuery = titles[0];
 
@@ -167,6 +196,9 @@ export default {
 
       return results.length > 0 ? results : generateFallbackResults(searchQuery, 'movie');
     } catch (e) {
+      if (typeof console !== 'undefined') {
+        console.error('[JKanime] movie() error:', e);
+      }
       return generateFallbackResults(searchQuery, 'movie');
     }
   }
